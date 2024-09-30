@@ -6,11 +6,11 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from "react-router-dom";
 import { signIn } from '../services/authService';
-import FormButton from '../components/Forms/FormButton';  
-import FormContainer from '../components/Forms/FormContainer'; 
-import FormHeader from '../components/Forms/FormHeader';  
-import FormInput from '../components/Forms/FormInput';  
-import FormLink from '../components/Forms/FormLink'; 
+import FormButton from '../components/Forms/FormButton';
+import FormContainer from '../components/Forms/FormContainer';
+import FormHeader from '../components/Forms/FormHeader';
+import FormInput from '../components/Forms/FormInput';
+import FormLink from '../components/Forms/FormLink';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -72,7 +72,7 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               isPassword={true}
             />
-            <FormButton label="Sign In" />
+            <FormButton label="Sign In" onClick={handleSubmit} />
             <Grid container>
               <Grid item xs>
                 <FormLink to="/EnterEmailPage" label="Forgot password?" />

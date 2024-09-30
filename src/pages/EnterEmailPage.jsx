@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Grid, Paper, CssBaseline, Typography } from '@mui/material';
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { sendCode } from '../services/authService.js';
 import FormContainer from '../components/Forms/FormContainer';
 import FormHeader from '../components/Forms/FormHeader';
@@ -48,7 +48,7 @@ const EnterEmailPage = () => {
                 setSnackbarSeverity('success');
                 setSnackbarOpen(true);
 
-                
+
                 setTimeout(() => {
                     navigate('/EnterCodePage', { state: { email } });
                 }, 2000);
@@ -111,6 +111,7 @@ const EnterEmailPage = () => {
                         />
                         <FormButton
                             label={loading ? 'Sending...' : 'Send Reset Link'}
+                            onClick={handleSubmit} 
                             disabled={loading}
                         />
                         <Grid container>

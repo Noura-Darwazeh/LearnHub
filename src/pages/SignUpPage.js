@@ -70,6 +70,7 @@ const SignUpPage = () => {
               label="Username"
               name="username"
               value={username}
+              type="text"
               onChange={(e) => setUserName(e.target.value)}
               error={errors.username}
               helperText={errors.username}
@@ -79,6 +80,7 @@ const SignUpPage = () => {
             <FormInput
               label="Email Address"
               name="email"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
@@ -99,7 +101,7 @@ const SignUpPage = () => {
           </Grid>
         </Grid>
         {errors.api && <Typography color="error">{errors.api}</Typography>}
-        <FormButton label="Sign Up" />
+        <FormButton label="Sign Up"  onClick={handleSubmit}/>
         <Grid container justifyContent="center">
           <Grid item>
             <FormLink to="/LoginPage" label="Already have an account? Sign in" />

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'; 
 import { Avatar, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -12,5 +13,9 @@ const FormHeader = ({ title }) => (
     </Typography>
   </>
 );
+
+FormHeader.propTypes = {
+  title: PropTypes.string.isRequired, 
+};
 
 export default FormHeader;

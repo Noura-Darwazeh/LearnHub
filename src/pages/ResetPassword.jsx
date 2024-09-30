@@ -86,7 +86,7 @@ const ResetPassword = () => {
           helperText={errors.confirmPassword}
           isPassword={true}
         />
-        <FormButton label="Change Password" />
+        <FormButton label="Change Password" onClick={handleSubmit} />
         <FormLink to="/LoginPage" label="Back to Login" />
       </form>
       <SnackbarAlert

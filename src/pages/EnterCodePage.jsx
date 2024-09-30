@@ -78,13 +78,17 @@ const EnterCodePage = () => {
                         <FormInput
                             label="Enter Code"
                             name="code"
+                            type="text"
                             value={code}
                             onChange={(event) => setCode(event.target.value)}
                             error={!!codeError}
                             helperText={codeError}
                         />
                         {apiError && <Typography color="error">{apiError}</Typography>}
-                        <FormButton label="Verify Code" />
+                        <FormButton
+                            label="Verify Code"
+                            onClick={handleSubmit}
+                        />
                         <Grid container>
                             <Grid item xs>
                                 <FormLink to="/EnterEmailPage" label="Resend Code" />
