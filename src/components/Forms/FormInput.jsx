@@ -20,6 +20,8 @@ const FormInput = ({
     setShowPassword(!showPassword);
   };
 
+  const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
+
   return (
     <TextField
       variant="outlined"
@@ -28,7 +30,7 @@ const FormInput = ({
       fullWidth
       label={label}
       name={name}
-      type={isPassword ? (showPassword ? 'text' : 'password') : type}
+      type={inputType}  
       value={value}
       onChange={onChange}
       error={!!error}

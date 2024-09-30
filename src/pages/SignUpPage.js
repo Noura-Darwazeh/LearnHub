@@ -11,7 +11,7 @@ import passwordValidationSchema from "../components/PasswordValidation/passwordV
 import Joi from "joi";
 
 const SignUpPage = () => {
-  const [username, setUserName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -71,7 +71,7 @@ const SignUpPage = () => {
               name="username"
               value={username}
               type="text"
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               error={errors.username}
               helperText={errors.username}
             />
