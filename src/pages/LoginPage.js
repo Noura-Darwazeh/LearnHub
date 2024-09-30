@@ -1,20 +1,42 @@
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { Link as RouterLink } from "react-router-dom";
-import MUILink from '@mui/material/Link';
-
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from "react-router-dom";
+import { signIn } from '../services/authService';
+import FormButton from '../components/Forms/FormButton';  
+import FormContainer from '../components/Forms/FormContainer'; 
+import FormHeader from '../components/Forms/FormHeader';  
+import FormInput from '../components/Forms/FormInput';  
+import FormLink from '../components/Forms/FormLink'; 
 
 const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+
+    if (!email || !password) {
+      setError('Please fill in both fields.');
+      return;
+    }
+
+    try {
+      const response = await signIn({ email, password });
+      console.log("Login success", response.data);
+      navigate('/HomePage');
+    } catch (error) {
+      console.log("Login failed", error);
+      setError('Login failed. Please try again.');
+    }
+  };
+
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
@@ -24,72 +46,44 @@ const LoginPage = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwxMjA3fDB8MHxwaG90by14bGx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=1080)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar sx={{ m: 1, backgroundColor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
+        <FormContainer>
+          <FormHeader title="Sign in" />
+          {error && <Typography color="error">{error}</Typography>}
+          <form noValidate onSubmit={handleSubmit}>
+            <FormInput
               label="Email Address"
               name="email"
-              autoComplete="email"
-              autoFocus
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
+            <FormInput
               label="Password"
+              name="password"
               type="password"
-              id="password"
-              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              isPassword={true}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
+            <FormButton label="Sign In" />
             <Grid container>
               <Grid item xs>
-                <MUILink href="#" variant="body2">
-                  Forgot password?
-                </MUILink>
+                <FormLink to="/EnterEmailPage" label="Forgot password?" />
               </Grid>
               <Grid item>
-                <MUILink component={RouterLink} to="/SignUpPage">
-                  Already have an account? Sign in
-                </MUILink>
+                <FormLink to="/SignUpPage" label="Don't have an account? Sign Up" />
               </Grid>
             </Grid>
-            <Box mt={5}>
-            </Box>
-          </Box>
-        </Box>
+            <Box mt={5}></Box>
+          </form>
+        </FormContainer>
       </Grid>
     </Grid>
   );
