@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types'; 
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const FormInput = ({
-  label, type, name, value, onChange, error, helperText, isPassword = false
+  label,
+  type,
+  name,
+  value,
+  onChange,
+  error = false, 
+  helperText = '', 
+  isPassword = false, 
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,6 +44,17 @@ const FormInput = ({
       } : null}
     />
   );
+};
+
+FormInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  helperText: PropTypes.string,
+  isPassword: PropTypes.bool,
 };
 
 export default FormInput;

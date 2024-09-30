@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'; 
 import { Button } from '@mui/material';
 
 const FormButton = ({ label, onClick, disabled = false }) => (
@@ -14,5 +15,12 @@ const FormButton = ({ label, onClick, disabled = false }) => (
     {label}
   </Button>
 );
+
+
+FormButton.propTypes = {
+  label: PropTypes.string.isRequired,        
+  onClick: PropTypes.func.isRequired,          
+  disabled: PropTypes.bool,                    
+};
 
 export default FormButton;
