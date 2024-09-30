@@ -3,10 +3,14 @@ import { useState, useEffect } from 'react';
 import AllCoursesApi from '../services/AllCoursesApi';
 import CourseCard from '../components/CourseCard';
 import Search from '../components/Search'
+import { useNavigate } from 'react-router-dom';  
+
+
 const CoursePage = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const getCourses = async () => {
@@ -26,6 +30,9 @@ const CoursePage = () => {
     if (loading) return <CircularProgress />;
     if (error) return <div>{error}</div>;
 
+    const handleLearnMore = (courseId) => {
+        navigate(`/course/${courseId}`);
+    };
     return (
         <Box sx={{ border: '1px solid #00749A', margin: '20px', borderRadius: '8px' }}>
             <Box display="flex" justifyContent="center" >
@@ -35,7 +42,7 @@ const CoursePage = () => {
             <Grid container spacing={3} padding={3}>
                 {courses && courses.map((course) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={course.id}>
-                        <CourseCard course={course} />
+                        <CourseCard course={course} onLearnMore={handleLearnMore} />
                     </Grid>
                 ))}
             </Grid>
