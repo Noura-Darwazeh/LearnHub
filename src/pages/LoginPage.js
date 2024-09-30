@@ -30,10 +30,18 @@ const LoginPage = () => {
     try {
       const response = await signIn({ email, password });
       console.log("Login success", response.data);
-      navigate('/HomePage');
+      localStorage.setItem('token', response.data.token);
+      const userRole = response.data.role;
+      if (userRole === 'user') {
+        navigate('/HomePage');
+      } else if (userRole === 'admin') {
+        navigate('/AdminCoursesPage');
+      } else {
+        setError('Unrecognized role. Please contact support.');
+      }
     } catch (error) {
       console.log("Login failed", error);
-      setError('Login failed. Please try again.');
+      setError('Invalid email or password. Please try again.');
     }
   };
 
