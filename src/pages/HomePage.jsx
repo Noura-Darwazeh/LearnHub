@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Slider from '../components/Slider';
@@ -10,6 +11,7 @@ const HomePage = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getCourses = async () => {
@@ -27,7 +29,17 @@ const HomePage = () => {
 
     if (loading) return <CircularProgress />;
     if (error) return <div>{error}</div>;
+    if (!courses || courses.length === 0) {
+        return <div>No courses available</div>;
+    }
 
+    const handleLearnMore = (courseId) => {
+        navigate(`/course/${courseId}`);
+    };
+
+    const handleViewAll = () => {
+        navigate('/courses')
+    }
     return (
         <>
             <Navbar />
@@ -35,12 +47,12 @@ const HomePage = () => {
             <Grid container spacing={3} padding={3}>
                 {courses && courses.map((course) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={course.id}>
-                        <CourseCard course={course} />
+                        <CourseCard course={course} onLearnMore={handleLearnMore} />
                     </Grid>
                 ))}
             </Grid>
-            <Box display="flex" justifyContent="center" mb={1}> {/* Add Box for centering */}
-                <Button variant="contained" sx={{ backgroundColor: '#00749A' }}>View All</Button>
+            <Box display="flex" justifyContent="center" mb={1}>
+                <Button variant="contained" sx={{ backgroundColor: '#00749A' }} onClick={handleViewAll}>View All</Button>
             </Box>
             <Footer />
         </>
