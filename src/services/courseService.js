@@ -1,35 +1,34 @@
 import axios from 'axios';
 
 const API_URL = "https://learnhub-backend-quk3.onrender.com/api/v1/course";
-const token = localStorage.getItem('token');
 
 
-export const fetchCourses = async (token, page) => {  
+export const fetchCourses = async (token, page) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${API_URL}/Courses`,
       headers: {
-        token: `LHub__${token}` 
+        token: `LHub__${token}`
       },
     });
 
-    console.log("Full Response:", response); 
+    console.log("Full Response:", response);
 
     if (Array.isArray(response.data)) {
-      return response.data; 
+      return response.data;
     } else {
       console.error('Unexpected response structure:', response.data);
-      return []; 
+      return [];
     }
   } catch (error) {
     console.error('Error fetching courses:', error);
-    return []; 
+    return [];
   }
 };
 
 export const deleteCourse = async (courseId) => {
-  const token = localStorage.getItem('token'); 
+  const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('Unauthorized: No token found');
   }
@@ -37,7 +36,7 @@ export const deleteCourse = async (courseId) => {
   try {
     await axios.delete(`${API_URL}/deleteCourses/${courseId}`, {
       headers: {
-        token: `LHub__${token}`, 
+        token: `LHub__${token}`,
       },
     });
   } catch (error) {
@@ -48,8 +47,7 @@ export const deleteCourse = async (courseId) => {
 
 
 
-export const createCourse = async (courseData) => {
-  const token = localStorage.getItem('token'); 
+export const createCourse = async (courseData, token) => {
   if (!token) {
     throw new Error('Unauthorized: No token found');
   }
@@ -61,27 +59,27 @@ export const createCourse = async (courseData) => {
       },
     });
 
-    console.log("Course created successfully:", response.data); 
-    return response.data; 
+    console.log("Course created successfully:", response.data);
+    return response.data;
   } catch (error) {
     console.error('Error creating course:', error);
-    throw error; 
+    throw error;
   }
 };
 
 
-export const updateCourse = async (courseId, updatedData) => {
-  
+
+export const updateCourse = async (courseId, courseData, token) => {
   try {
-    const response = await axios.patch(
-      `${API_URL}/courses/${courseId}`,
-      updatedData,
-      {
-        headers: {
-          token: `LHub__${token}`, 
-        },
-      }
-    );
+    const response = await axios({
+      method: 'patch',
+      url: `${API_URL}/courses/${courseId}`,
+      headers: {
+        token: `LHub__${token}`,
+      },
+      data: courseData,
+    });
+
     return response.data;
   } catch (error) {
     console.error('Error updating course:', error);
