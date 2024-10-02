@@ -17,7 +17,7 @@ import {
 import { Add, Search, Edit, Delete } from '@mui/icons-material';
 import AddCourseDialog from '../components/CourseDialog/AddCourseDialog';
 import UpdateCourseDialog from '../components/CourseDialog/UpdateCourseDialog';
-import { fetchCourses, deleteCourse, updateCourse } from '../services/courseService';
+import { fetchCourses, deleteCourse } from '../services/courseService';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
 
 const AdminCoursesPage = () => {
@@ -31,29 +31,28 @@ const AdminCoursesPage = () => {
   const [deleting, setDeleting] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const token = localStorage.getItem('token');
+
+  const loadCourses = async () => {
+    setLoading(true);
+    try {
+      const fetchedCourses = await fetchCourses(token, page);
+      setCourses(fetchedCourses);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setSnackbar({ open: true, message: 'Failed to load courses', severity: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadCourses = async () => {
-      setLoading(true);
-      try {
-        const fetchedCourses = await fetchCourses(page);
-        setCourses(fetchedCourses);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-        setSnackbar({ open: true, message: 'Failed to load courses', severity: 'error' });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadCourses();
   }, [page]);
 
-  const filteredCourses = Array.isArray(courses)
-    ? courses.filter(course =>
-      course?.title?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    : [];
+  const filteredCourses = courses.filter(course =>
+    course?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const indexOfLastCourse = page * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
@@ -61,8 +60,8 @@ const AdminCoursesPage = () => {
   const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
   const handleDelete = async (id) => {
-    const prevCourses = [...courses];
     setDeleting(true);
+    const prevCourses = [...courses];
     try {
       setCourses(prevCourses.filter(course => course._id !== id));
       await deleteCourse(id);
@@ -76,44 +75,16 @@ const AdminCoursesPage = () => {
     }
   };
 
-  const handleAddCourse = async (newCourse) => {
-    try {
-      const fetchedCourses = await fetchCourses(page);
-      setCourses(fetchedCourses);
-      
-      setSnackbar({ open: true, message: 'Course added successfully', severity: 'success' });
-    } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to add course', severity: 'error' });
-    }
-  };
-  
-
   const handleEdit = (course) => {
     setSelectedCourse(course);
     setUpdateDialogOpen(true);
   };
 
-
-  const handleUpdateCourse = async (courseId, updatedData) => {
-    try {
-      await updateCourse(courseId, updatedData);
-
-      const fetchedCourses = await fetchCourses(page);
-      setCourses(fetchedCourses);
-
-      setSnackbar({ open: true, message: 'Course updated successfully', severity: 'success' });
-    } catch (error) {
-      console.error('Error updating course:', error);
-      setSnackbar({ open: true, message: 'Failed to update course', severity: 'error' });
-    }
-  };
-
-
   return (
     <Container maxWidth="lg" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
         <TextField
-          label="Search"
+          label="Search by title"
           variant="outlined"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -154,19 +125,14 @@ const AdminCoursesPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Array.isArray(currentCourses) && currentCourses.length > 0 ? (
+              {currentCourses.length > 0 ? (
                 currentCourses.map(course => (
                   <TableRow key={course._id}>
                     <TableCell>{course.title}</TableCell>
                     <TableCell>{course.subject}</TableCell>
                     <TableCell>{course.capacity}</TableCell>
                     <TableCell>
-                      {course.instructors.map((instructor, index) => (
-                        <span key={`${instructor}-${index}`}>
-                          {instructor}
-                          {index < course.instructors.length - 1 && ', '}
-                        </span>
-                      ))}
+                      {course.instructors.join(', ')}
                     </TableCell>
                     <TableCell>{course.startDate}</TableCell>
                     <TableCell>{course.endDate}</TableCell>
@@ -209,25 +175,36 @@ const AdminCoursesPage = () => {
         variant="outlined"
         shape="rounded"
         style={{ marginTop: '16px' }}
+        disabled={totalPages === 0}
       />
 
       <AddCourseDialog
         open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onSubmit={handleAddCourse}
+        onClose={() => {
+          setDialogOpen(false);
+          loadCourses();
+        }}
+        token={token}
       />
 
       {selectedCourse && (
         <UpdateCourseDialog
           open={updateDialogOpen}
-          onClose={() => setUpdateDialogOpen(false)}
+          onClose={() => {
+            setUpdateDialogOpen(false);
+            loadCourses();
+          }}
+          token={token}
           course={selectedCourse}
-          onSubmit={handleUpdateCourse}
         />
-
       )}
 
-      <SnackbarAlert {...snackbar} onClose={() => setSnackbar({ ...snackbar, open: false })} />
+      <SnackbarAlert
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      />
     </Container>
   );
 };

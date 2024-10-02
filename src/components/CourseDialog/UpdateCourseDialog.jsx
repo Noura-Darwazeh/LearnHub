@@ -1,68 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  DialogActions,
-  Button,
-} from '@mui/material';
-import SnackbarAlert from '../../components/SnackBar/SnackbarAlert';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
+import { updateCourse } from '../../services/courseService';
+import SnackbarAlert from '../SnackBar/SnackbarAlert';
 
-const UpdateCourseDialog = ({ open, onClose, course, onSubmit }) => {
-  const [title, setTitle] = useState(course?.title || '');
-  const [subject, setSubject] = useState(course?.subject || '');
-  const [capacity, setCapacity] = useState(course?.capacity || '');
-  const [instructors, setInstructors] = useState(course?.instructors.join(', ') || ''); 
-  const [startDate, setStartDate] = useState(course?.startDate || '');
-  const [endDate, setEndDate] = useState(course?.endDate || '');
-  const [description, setDescription] = useState(course?.description || ''); 
-  
- 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+const UpdateCourseDialog = ({ open, onClose, token, course }) => {
+  const [title, setTitle] = useState('');
+  const [subject, setSubject] = useState('');
+  const [capacity, setCapacity] = useState('');
+  const [instructors, setInstructors] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [description, setDescription] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   useEffect(() => {
-    if (course) {
+    if (open && course) {
       setTitle(course.title);
       setSubject(course.subject);
       setCapacity(course.capacity);
-      setInstructors(course.instructors.join(', ')); 
-      setStartDate(course.startDate);
-      setEndDate(course.endDate);
-      setDescription(course.description); 
+      setInstructors(course.instructors.join(', '));
+      setStartDate(course.startDate.split('T')[0]);
+      setEndDate(course.endDate.split('T')[0]);
+      setDescription(course.description);
     }
-  }, [course]);
+  }, [open, course]);
 
-  const handleSubmit = () => {
-    const updatedCourse = {
+  const handleSubmit = async () => {
+    setDateError('');
+
+    if (new Date(startDate) > new Date(endDate)) {
+      setDateError('Start date must be before end date');
+      return;
+    }
+
+    const courseData = {
       title,
       description,
-      instructors: instructors.split(',').map(i => i.trim()), 
+      instructors: instructors.split(',').map(instructor => instructor.trim()),
       startDate,
       endDate,
-      capacity: parseInt(capacity, 10), 
+      capacity: parseInt(capacity, 10),
       subject,
     };
 
- 
     try {
-      onSubmit(course._id, updatedCourse);
-      setSnackbarMessage('Course updated successfully!');
-      setSnackbarSeverity('success');
+      const updatedCourse = await updateCourse(course._id, courseData, token);
+      console.log("Updated Course:", updatedCourse);
+      setSnackbar({ open: true, message: 'Course updated successfully!', severity: 'success' });
+      clearFields();
+      onClose();
     } catch (error) {
-      setSnackbarMessage('Failed to update course. Please try again.');
-      setSnackbarSeverity('error');
-    } finally {
-      setSnackbarOpen(true);
-      onClose(); 
+      console.error('Failed to update course:', error);
+      setSnackbar({ open: true, message: 'Failed to update course', severity: 'error' });
     }
+  };
+  const clearFields = () => {
+    setTitle('');
+    setDescription('');
+    setInstructors('');
+    setStartDate('');
+    setEndDate('');
+    setCapacity('');
+    setSubject('');
   };
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>Update Course</DialogTitle>
         <DialogContent>
           <TextField
@@ -110,6 +115,8 @@ const UpdateCourseDialog = ({ open, onClose, course, onSubmit }) => {
             InputLabelProps={{ shrink: true }}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
+            error={!!dateError}
+            helperText={dateError}
           />
           <TextField
             margin="dense"
@@ -123,10 +130,11 @@ const UpdateCourseDialog = ({ open, onClose, course, onSubmit }) => {
           <TextField
             margin="dense"
             label="Description"
+            type="text"
             fullWidth
             variant="outlined"
             value={description}
-            onChange={(e) => setDescription(e.target.value)} 
+            onChange={(e) => setDescription(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
@@ -136,12 +144,11 @@ const UpdateCourseDialog = ({ open, onClose, course, onSubmit }) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <SnackbarAlert 
-        open={snackbarOpen} 
-        onClose={() => setSnackbarOpen(false)} 
-        message={snackbarMessage} 
-        severity={snackbarSeverity} 
+      <SnackbarAlert
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
     </>
   );
