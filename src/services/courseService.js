@@ -62,8 +62,15 @@ export const createCourse = async (courseData, token) => {
     console.log("Course created successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error('Error creating course:', error);
-    throw error;
+    console.error('Full Error Response:', error.response);
+
+    const errorMessage = error.response?.data?.message || 
+                         error.response?.data?.error || 
+                         error.response?.statusText || 
+                         'An error occurred';
+    console.error('Error creating course:', errorMessage);
+    
+    throw new Error(errorMessage);
   }
 };
 
