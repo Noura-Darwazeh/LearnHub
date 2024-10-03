@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import {
     Button,
     TextField,
@@ -32,10 +32,10 @@ const AdminUsersPage = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const [searchType, setSearchType] = useState('username'); // Updated to use a string value
+    const [searchType, setSearchType] = useState('username'); 
     const token = localStorage.getItem('token');
 
-    const loadUsers = async () => {
+    const loadUsers = useCallback(async () => {
         setLoading(true);
         try {
             const fetchedUsers = await getAllUsers(token);
@@ -46,15 +46,16 @@ const AdminUsersPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token]); 
 
     useEffect(() => {
         loadUsers();
-    }, [page]);
+    }, [loadUsers, page]); 
+
 
     const handleSearch = async () => {
         if (!searchTerm) {
-            await loadUsers(); // Load all users if search term is empty
+            await loadUsers(); 
             return;
         }
 
@@ -75,7 +76,7 @@ const AdminUsersPage = () => {
         }
     };
 
-    const filteredUsers = users; // Updated to use fetched users from search
+    const filteredUsers = users;
 
     const indexOfLastUser = page * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -92,15 +93,15 @@ const AdminUsersPage = () => {
         const prevUsers = [...users];
 
         try {
-            setUsers(prevUsers.filter(user => user._id !== id));  // Optimistic UI update
-            await deleteUser(id, token);  // Pass the token to the deleteUser function
+            setUsers(prevUsers.filter(user => user._id !== id)); 
+            await deleteUser(id, token);  
             setSnackbar({ open: true, message: 'User deleted successfully', severity: 'success' });
         } catch (error) {
-            setUsers(prevUsers);  // Revert UI update on error
+            setUsers(prevUsers);  
             console.error("Error deleting user:", error);
             setSnackbar({ open: true, message: 'Failed to delete user', severity: 'error' });
         } finally {
-            setDeleting(false);  // Stop the loading spinner
+            setDeleting(false);  
         }
     };
 
@@ -112,18 +113,17 @@ const AdminUsersPage = () => {
 
     const handleEditDialogClose = async () => {
         setEditDialogOpen(false);
-        setSelectedUser(null); // Clear the selected user
-        await loadUsers(); // Reload the users after update
+        setSelectedUser(null); 
+        await loadUsers(); 
     };
 
     const toggleSearchType = () => {
         setSearchType(prevType => (prevType === 'username' ? 'email' : 'username'));
     };
 
-    // Function to handle key down event
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            handleSearch(); // Trigger search on Enter key
+            handleSearch(); 
         }
     };
 
@@ -135,7 +135,7 @@ const AdminUsersPage = () => {
                     variant="outlined"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyDown={handleKeyDown} // Add key down event
+                    onKeyDown={handleKeyDown} 
                     style={{ width: '300px' }}
                     InputProps={{
                         startAdornment: (
@@ -195,13 +195,13 @@ const AdminUsersPage = () => {
                                         <TableCell>
                                             <div style={{ display: 'flex', gap: '8px' }}>
                                                 <Button size="small" onClick={() => {
-                                                    setSelectedUser(user); // Set the selected user
-                                                    setEditDialogOpen(true); // Open the edit dialog
+                                                    setSelectedUser(user); 
+                                                    setEditDialogOpen(true); 
                                                 }}>
                                                     <Edit fontSize="small" />
                                                 </Button>
                                                 <Button
-                                                    onClick={() => handleDelete(user._id)}  // Call handleDelete with user ID
+                                                    onClick={() => handleDelete(user._id)}  
                                                     size="small"
                                                     sx={{
                                                         color: 'inherit',
@@ -209,7 +209,7 @@ const AdminUsersPage = () => {
                                                             color: 'red',
                                                         },
                                                     }}
-                                                    disabled={deleting}  // Disable the button if deleting
+                                                    disabled={deleting}  
                                                 >
                                                     {deleting ? <CircularProgress size={24} /> : <Delete fontSize="small" />}
                                                 </Button>

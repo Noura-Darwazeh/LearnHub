@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Button,
   TextField,
@@ -14,10 +14,13 @@ import {
   InputAdornment,
   CircularProgress,
 } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { FilterList } from '@mui/icons-material';
 import { Add, Search, Edit, Delete } from '@mui/icons-material';
 import AddCourseDialog from '../components/CourseDialog/AddCourseDialog';
 import UpdateCourseDialog from '../components/CourseDialog/UpdateCourseDialog';
 import { fetchCourses, deleteCourse } from '../services/courseService';
+import { searchCourseByTitle, searchCourseBySubject } from '../services/courseService';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
 
 const AdminCoursesPage = () => {
@@ -31,9 +34,10 @@ const AdminCoursesPage = () => {
   const [deleting, setDeleting] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [searchType, setSearchType] = useState('title');
   const token = localStorage.getItem('token');
 
-  const loadCourses = async () => {
+  const loadCourses = useCallback(async () => {
     setLoading(true);
     try {
       const fetchedCourses = await fetchCourses(token, page);
@@ -44,20 +48,18 @@ const AdminCoursesPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
+  }, [page, token]);
+  
   useEffect(() => {
-    loadCourses();
-  }, [page]);
+    loadCourses();  // Load courses when the component mounts and when the page changes
+  }, [loadCourses, page]);
 
-  const filteredCourses = courses.filter(course =>
-    course?.title?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const indexOfLastCourse = page * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
-  const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const totalPages = Math.ceil(courses.length / coursesPerPage);
+
 
   const handleDelete = async (id) => {
     setDeleting(true);
@@ -80,23 +82,63 @@ const AdminCoursesPage = () => {
     setUpdateDialogOpen(true);
   };
 
+  const handleSearch = async () => {
+    if (!searchTerm) {
+      await loadCourses(); // Load all courses if no search term is provided
+      return;
+    }
+  
+    setLoading(true);
+    try {
+      let fetchedCourses;
+      if (searchType === 'subject') {
+        fetchedCourses = await searchCourseBySubject(searchTerm, token); // Fetch courses by subject
+      } else {
+        fetchedCourses = await searchCourseByTitle(searchTerm, token);  // Fetch courses by title
+      }
+      setCourses(fetchedCourses); 
+    } catch (error) {
+      console.error("Error searching courses:", error);
+      setSnackbar({ open: true, message: 'Failed to search courses', severity: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSearchType = () => {
+    setSearchType((prevType) => (prevType === 'title' ? 'subject' : 'title'));
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch(); 
+    }
+  };
+
   return (
     <Container maxWidth="lg" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
-        <TextField
-          label="Search by title"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '300px' }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
-          }}
-        />
+      <TextField
+  label={`Search by ${searchType}`} // Display the current search type
+  variant="outlined"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  onKeyDown={handleKeyDown}
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <Search />
+      </InputAdornment>
+    ),
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton onClick={toggleSearchType}>
+          <FilterList />
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
         <Button
           variant="contained"
           color="primary"
