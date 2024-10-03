@@ -6,10 +6,10 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import FormInput from '../Forms/FormInput'; // Import your FormInput component
-import passwordValidationSchema from '../PasswordValidation/passwordValidationSchema'; // Import your password validation schema
-import SnackbarAlert from '../SnackBar/SnackbarAlert'; // Import your SnackbarAlert component
-import { createUser } from '../../services/AdminUserService'; // Import your createUser function
+import FormInput from '../Forms/FormInput'; 
+import passwordValidationSchema from '../PasswordValidation/passwordValidationSchema'; 
+import SnackbarAlert from '../SnackBar/SnackbarAlert'; 
+import { createUser } from '../../services/AdminUserService'; 
 
 const AddUserDialog = ({ open, onClose, token }) => {
   const [username, setUsername] = useState('');
@@ -45,8 +45,8 @@ const AddUserDialog = ({ open, onClose, token }) => {
     };
 
     try {
-      const createdUser = await createUser(userData, token); // Call createUser function
-      console.log("Created User:", createdUser); // For debugging
+      const createdUser = await createUser(userData, token); 
+      console.log("Created User:", createdUser); 
       setSnackbar({ open: true, message: 'User added successfully!', severity: 'success' });
       clearFields();
       onClose();

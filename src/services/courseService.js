@@ -93,3 +93,34 @@ export const updateCourse = async (courseId, courseData, token) => {
     throw error;
   }
 };
+
+
+export const searchCourseByTitle = async (title, token) => {
+  try {
+    const response = await axios.get(`${API_URL}/search/title/${title}`, {
+      headers: {
+        token: `LHub__${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error searching course by title (${title}):`, error);
+    throw error;
+  }
+};
+
+export const searchCourseBySubject = async (subject, token) => {
+  try {
+    const response = await axios.get(`${API_URL}/search/subject/${subject}`, {
+      headers: {
+        token: `LHub__${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`Error searching course by subject (${subject}):`, error);
+    throw error;
+  }
+};

@@ -35,7 +35,7 @@ const LoginPage = () => {
       if (userRole === 'user') {
         navigate('/ProfilePage');
       } else if (userRole === 'admin') {
-        navigate('/AdminUsersPage');
+        navigate('/Dashboard');
       } else {
         setError('Unrecognized role. Please contact support.');
       }

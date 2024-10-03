@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
-import { updateUser, updateUserPassword } from '../../services/AdminUserService'; // Import both services
+import { updateUser, updateUserPassword } from '../../services/AdminUserService'; 
 import SnackbarAlert from '../SnackBar/SnackbarAlert';
 import passwordValidationSchema from '../PasswordValidation/passwordValidationSchema';
 import FormInput from '../Forms/FormInput';
@@ -16,7 +16,7 @@ const EditUserDialog = ({ open, onClose, token, user }) => {
     if (open && user) {
       setUsername(user.username);
       setEmail(user.email);
-      setPassword(''); // We leave this blank unless they want to change it
+      setPassword(''); 
     }
   }, [open, user]);
 
@@ -25,24 +25,23 @@ const EditUserDialog = ({ open, onClose, token, user }) => {
       if (password) {
         const { error } = passwordValidationSchema.validate(password);
         if (error) {
-          setPasswordError(error.message); // Set error message if validation fails
+          setPasswordError(error.message);
           return;
         } else {
-          setPasswordError(''); // Clear error if validation passes
+          setPasswordError(''); 
         }
       }
   
-      // Update user details
+     
       const userData = { username, email };
       await updateUser(user._id, userData, token);
   
-      // Update password only if it's changed
       if (password) {
         await updateUserPassword(user._id, password, token);
       }
   
       setSnackbar({ open: true, message: 'User updated successfully!', severity: 'success' });
-      onClose(); // Close the dialog after successful update
+      onClose(); 
     } catch (error) {
       console.error('Failed to update user:', error);
       setSnackbar({ open: true, message: 'Failed to update user or password', severity: 'error' });
@@ -79,7 +78,7 @@ const EditUserDialog = ({ open, onClose, token, user }) => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            isPassword={true} // Enable password toggle
+            isPassword={true}
             error={!!passwordError}
             helperText={passwordError}
           />
