@@ -13,15 +13,20 @@ const AddCourseDialog = ({ open, onClose, token }) => {
   const [description, setDescription] = useState('');
   const [dateError, setDateError] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-
   const handleSubmit = async () => {
     setDateError('');
+  
+ 
+    if (!title || !subject || !capacity || !instructors || !startDate || !endDate || !description) {
+      setSnackbar({ open: true, message: 'Please fill all fields', severity: 'error' });
+      return;
+    }
 
     if (new Date(startDate) > new Date(endDate)) {
       setDateError('Start date must be before end date');
       return;
     }
-
+  
     const courseData = {
       title,
       description,
@@ -31,7 +36,7 @@ const AddCourseDialog = ({ open, onClose, token }) => {
       capacity: parseInt(capacity, 10),
       subject,
     };
-
+  
     try {
       const createdCourse = await createCourse(courseData, token);
       console.log("Created Course:", createdCourse);
@@ -39,11 +44,11 @@ const AddCourseDialog = ({ open, onClose, token }) => {
       clearFields();
       onClose();
     } catch (error) {
-      console.error('Failed to create course:', error);
-      setSnackbar({ open: true, message: 'Failed to create course', severity: 'error' });
+      setSnackbar({ open: true, message: error.message, severity: 'error' });
     }
   };
-
+  
+  
   const clearFields = () => {
     setTitle('');
     setDescription('');
