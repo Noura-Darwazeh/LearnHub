@@ -20,7 +20,7 @@ import { Add, Search, Edit, Delete } from '@mui/icons-material';
 import AddCourseDialog from '../components/CourseDialog/AddCourseDialog';
 import UpdateCourseDialog from '../components/CourseDialog/UpdateCourseDialog';
 import { fetchCourses, deleteCourse } from '../services/courseService';
-import { searchCourseByTitle, searchCourseBySubject } from '../services/courseService';
+import { searchCourseByTitle, searchCourseBySubject, searchCourseByInstructor, searchCourseByStartDate } from '../services/courseService';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
 
 const AdminCoursesPage = () => {
@@ -49,9 +49,9 @@ const AdminCoursesPage = () => {
       setLoading(false);
     }
   }, [page, token]);
-  
+
   useEffect(() => {
-    loadCourses();  // Load courses when the component mounts and when the page changes
+    loadCourses();  
   }, [loadCourses, page]);
 
 
@@ -84,19 +84,27 @@ const AdminCoursesPage = () => {
 
   const handleSearch = async () => {
     if (!searchTerm) {
-      await loadCourses(); // Load all courses if no search term is provided
+      await loadCourses(); 
       return;
     }
-  
+
     setLoading(true);
     try {
       let fetchedCourses;
-      if (searchType === 'subject') {
-        fetchedCourses = await searchCourseBySubject(searchTerm, token); // Fetch courses by subject
-      } else {
-        fetchedCourses = await searchCourseByTitle(searchTerm, token);  // Fetch courses by title
+      switch (searchType) {
+        case 'subject':
+          fetchedCourses = await searchCourseBySubject(searchTerm, token);
+          break;
+        case 'instructor':
+          fetchedCourses = await searchCourseByInstructor(searchTerm, token);
+          break;
+        case 'startdate':
+          fetchedCourses = await searchCourseByStartDate(searchTerm, token);
+          break;
+        default:
+          fetchedCourses = await searchCourseByTitle(searchTerm, token);
       }
-      setCourses(fetchedCourses); 
+      setCourses(fetchedCourses);
     } catch (error) {
       console.error("Error searching courses:", error);
       setSnackbar({ open: true, message: 'Failed to search courses', severity: 'error' });
@@ -105,40 +113,46 @@ const AdminCoursesPage = () => {
     }
   };
 
+
   const toggleSearchType = () => {
-    setSearchType((prevType) => (prevType === 'title' ? 'subject' : 'title'));
+    const nextType = searchType === 'title' ? 'subject'
+      : searchType === 'subject' ? 'instructor'
+        : searchType === 'instructor' ? 'startdate'
+          : 'title';
+    setSearchType(nextType);
   };
+
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      handleSearch(); 
+      handleSearch();
     }
   };
 
   return (
     <Container maxWidth="lg" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
-      <TextField
-  label={`Search by ${searchType}`} // Display the current search type
-  variant="outlined"
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  onKeyDown={handleKeyDown}
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position="start">
-        <Search />
-      </InputAdornment>
-    ),
-    endAdornment: (
-      <InputAdornment position="end">
-        <IconButton onClick={toggleSearchType}>
-          <FilterList />
-        </IconButton>
-      </InputAdornment>
-    ),
-  }}
-/>
+        <TextField
+          label={`Search by ${searchType}`}
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyDown}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={toggleSearchType}>
+                  <FilterList />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
         <Button
           variant="contained"
           color="primary"

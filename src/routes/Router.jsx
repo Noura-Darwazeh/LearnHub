@@ -28,7 +28,10 @@ const AppRoutes = () => {
             <Route path="/HomePage" element={<HomePage />} />
             <Route path="/ResetPassword" element={<ResetPassword />} />
             <Route path="/ProfilePage" element={<ProfilePage />} />
-            <Route path="/Dashboard/*" element={<Dashboard />} /> {/* Note the /* for nested routes */}
+            <Route path="/Dashboard/*" element={<Dashboard />}>
+                <Route path="AdminUsersPage" element={<AdminUsersPage />} />
+                <Route path="AdminCoursesPage" element={<AdminCoursesPage />} />
+            </Route>
         </Routes>
     );
 };
