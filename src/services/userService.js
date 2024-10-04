@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'https://learnhub-backend-quk3.onrender.com/api/v1/user';
+const API_Users_URL = 'https://learnhub-backend-quk3.onrender.com/api/v1/enrollCourse/courses';
 
 export const fetchUserProfile = async (token) => {
     try {
@@ -64,7 +65,7 @@ export const fetchUserCourses = async (token) => {
     try {
         const response = await axios({
             method: 'get',
-            url: 'https://learnhub-backend-quk3.onrender.com/api/v1/enrollCourse/courses/user',
+            url: `${API_Users_URL}/user`,
             headers: {
                 'token': `LHub__${token}`,
             },
