@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams to get courseId from URL
+import { useParams, useNavigate } from 'react-router-dom'; // Import useParams to get courseId from URL
 import { Container, Typography, Box, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import axios from 'axios';
@@ -11,7 +10,7 @@ const CourseDetailsContainer = styled(Container)({
   borderRadius: '16px',
   maxWidth: '800px',
   marginTop: '50px',
-  border:'1px solid #00749A'
+  border: '1px solid #00749A'
 });
 
 const CourseTitle = styled(Typography)({
@@ -33,7 +32,7 @@ const CourseDetailsBox = styled(Box)({
   padding: '20px',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
   marginTop: '20px',
-  border:'1px solid #00749A'
+  border: '1px solid #00749A'
 });
 
 const RegisterButton = styled(Button)({
@@ -49,6 +48,8 @@ const CourseDetailsPage = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoggedin, setIsLoggedin] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
@@ -65,18 +66,54 @@ const CourseDetailsPage = () => {
     fetchCourseDetails();
   }, [courseId]);
 
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedin(!!token);
+  }, []);
+
+  const handleRegisterClick = async () => {
+    if (isLoggedin) {
+      try {
+        const token = localStorage.getItem('token');
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${token}` 
+          }
+        };
+        
+        const response = await axios.post(
+          `https://learnhub-backend-quk3.onrender.com/api/v1/course/enrollCourse/enroll`,
+          { courseId }, 
+          config
+        );
+
+        if (response.status === 200) {
+          alert('Registration has been completed successfully.');
+        } else {
+          alert('Registration was not successful');
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        alert('Error');
+      }
+    } else {
+      navigate('/login'); 
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <CourseDetailsContainer>
       <CourseTitle>{course.title}</CourseTitle>
-      <CourseInfo>Instructor: 
+      <CourseInfo>Instructor:
         <ul>
-      {course && course.instructors.map((instructor,index)=>(
-        <li key={index}>{instructor}</li>
-      ))}
-      </ul>
+          {course && course.instructors.map((instructor, index) => (
+            <li key={index}>{instructor}</li>
+          ))}
+        </ul>
       </CourseInfo>
       <CourseInfo>Start Date: {course.startDate}</CourseInfo>
       <CourseInfo>End Date: {course.endDate}</CourseInfo>
@@ -93,7 +130,7 @@ const CourseDetailsPage = () => {
         </Typography>
       </CourseDetailsBox>
 
-      <RegisterButton>
+      <RegisterButton onClick={handleRegisterClick}>
         Register for the Course
       </RegisterButton>
     </CourseDetailsContainer>
