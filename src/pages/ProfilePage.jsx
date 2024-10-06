@@ -26,8 +26,8 @@ he can see details about these courses by click on the course card */
 
 const ProfilePage = () => {
     const [user, setUser] = useState({ username: '', email: '', courses: [] });
-    const [setIsEditingUsername] = useState(false);
-    const [setIsEditingPassword] = useState(false);
+    const [isEditingUsername, setIsEditingUsername] = useState(false);
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [newUsername, setNewUsername] = useState("");
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -216,7 +216,7 @@ const ProfilePage = () => {
                         zIndex: 2,
                     }}
                 >
-                    <BackToHomeButton />
+                    <BackToHomeButton sx={{ color: 'white' }} />
                 </Box>
 
                 <Box
