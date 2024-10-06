@@ -11,12 +11,12 @@ import EmailIcon from '@mui/icons-material/Email';
 import FormInput from '../components/Forms/FormInput'
 import passwordValidationSchema from '../components/PasswordValidation/passwordValidationSchema';
 import { useNavigate } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import PasswordChangeDialog from '../components/PasswordChangeDialog/PasswordChangeDialog'; 
+import PasswordChangeDialog from '../components/PasswordChangeDialog/PasswordChangeDialog';
+import BackToHomeButton from '../components/HomeButton/BackToHomeButton';  // Import the new button
 
 
 /* This page is a profile for the user on the website , it has options to edit the username,
@@ -49,7 +49,7 @@ const ProfilePage = () => {
                         setUser({
                             username: profile.user.username,
                             email: profile.user.email,
-                            courses: [] 
+                            courses: []
                         });
                         setNewUsername(profile.user.username);
                         return fetchUserCourses(token);
@@ -57,7 +57,7 @@ const ProfilePage = () => {
                 })
                 .then(courses => {
                     if (courses) {
-                        
+
                         setUser(prev => ({ ...prev, courses }));
                     }
                 })
@@ -93,12 +93,12 @@ const ProfilePage = () => {
         const { error } = passwordValidationSchema.validate(newPassword);
 
         if (error) {
-            setPasswordError(error.message); 
+            setPasswordError(error.message);
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setPasswordError("Passwords do not match"); 
+            setPasswordError("Passwords do not match");
             return;
         } else {
             setPasswordError("");
@@ -169,7 +169,7 @@ const ProfilePage = () => {
     };
 
     const handleCourseClick = (courseId) => {
-        navigate(`/courses/${courseId}`); 
+        navigate(`/courses/${courseId}`);
     };
 
 
@@ -203,8 +203,8 @@ const ProfilePage = () => {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)', 
-                        zIndex: 1, 
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        zIndex: 1,
                     }}
                 />
                 <Box
@@ -216,14 +216,7 @@ const ProfilePage = () => {
                         zIndex: 2,
                     }}
                 >
-                    <Button
-                        variant="outlined"
-                        startIcon={<HomeIcon />}
-                        onClick={() => navigate('/HomePage')}
-                        sx={{ color: 'white', borderColor: 'white' }}
-                    >
-                        Back to Home
-                    </Button>
+                    <BackToHomeButton />
                 </Box>
 
                 <Box
@@ -281,7 +274,7 @@ const ProfilePage = () => {
                                 variant="outlined"
                                 size="small"
                                 startIcon={<EditIcon />}
-                                onClick={() => setOpenUsernameDialog(true)} 
+                                onClick={() => setOpenUsernameDialog(true)}
                                 sx={{ ml: 2 }}
                             >
                                 Edit
@@ -322,7 +315,7 @@ const ProfilePage = () => {
                                 variant="outlined"
                                 size="small"
                                 startIcon={<LockIcon />}
-                                onClick={() => setOpenPasswordDialog(true)} 
+                                onClick={() => setOpenPasswordDialog(true)}
                                 sx={{ ml: 2 }}
                             >
                                 Change Password
