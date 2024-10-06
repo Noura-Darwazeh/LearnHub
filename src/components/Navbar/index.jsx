@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,12 +20,13 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+    
     const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
+
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -38,6 +39,10 @@ function ResponsiveAppBar() {
         setAnchorElUser(null);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/LoginPage');
+    };
 
     const handleNavigate = (page) => {
         if (page === 'Home') {
@@ -49,6 +54,7 @@ function ResponsiveAppBar() {
         }
         handleCloseNavMenu();
     };
+
 
     return (
         <AppBar position="static" sx={{ backgroundColor: '#00749A' }}>
@@ -139,7 +145,10 @@ function ResponsiveAppBar() {
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <IconButton
+                                onClick={handleOpenUserMenu}
+                                sx={{ p: 0 }}
+                            >
                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
@@ -160,7 +169,19 @@ function ResponsiveAppBar() {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                <MenuItem
+                                    key={setting}
+                                    onClick={() => {
+                                        if (setting === 'Logout') {
+                                            handleLogout();
+                                        } else if (setting === 'Profile') {
+                                            handleCloseUserMenu(); 
+                                            navigate('/ProfilePage'); 
+                                        } else {
+                                            handleCloseUserMenu();
+                                        }
+                                    }}
+                                >
                                     <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                                 </MenuItem>
                             ))}

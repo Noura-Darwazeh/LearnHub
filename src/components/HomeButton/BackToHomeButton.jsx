@@ -3,8 +3,8 @@ import { Button } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 
-/** This code is for a button that navigae the user to  the Home page */
-const BackToHomeButton = () => {
+/** This code is for a button that navigates the user to the Home page */
+const BackToHomeButton = ({ sx }) => {
     const navigate = useNavigate();
 
     const handleBackToHome = () => {
@@ -16,7 +16,7 @@ const BackToHomeButton = () => {
             variant="outlined"
             startIcon={<HomeIcon />}
             onClick={handleBackToHome}
-            sx={{ color: 'white', borderColor: 'white' }}
+            sx={sx}
         >
             Back to Home
         </Button>
