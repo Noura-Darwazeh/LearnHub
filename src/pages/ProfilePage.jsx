@@ -18,6 +18,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import PasswordChangeDialog from '../components/PasswordChangeDialog/PasswordChangeDialog'; 
 
+
+/* This page is a profile for the user on the website , it has options to edit the username,
+and to change password, delete account and to see the list of courses that the user enrolled in and 
+he can see details about these courses by click on the course card */
+
+
 const ProfilePage = () => {
     const [user, setUser] = useState({ username: '', email: '', courses: [] });
     const [setIsEditingUsername] = useState(false);
