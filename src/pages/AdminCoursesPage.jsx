@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Button,
-  TextField,
-  Pagination,
+  CircularProgress,
   Container,
   Paper,
   Table,
@@ -11,17 +10,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  InputAdornment,
-  CircularProgress,
+  Pagination,
 } from '@mui/material';
-import { IconButton } from '@mui/material';
-import { FilterList } from '@mui/icons-material';
-import { Add, Search, Edit, Delete } from '@mui/icons-material';
+import { Add, Edit, Delete } from '@mui/icons-material';
 import AddCourseDialog from '../components/CourseDialog/AddCourseDialog';
 import UpdateCourseDialog from '../components/CourseDialog/UpdateCourseDialog';
 import { fetchCourses, deleteCourse } from '../services/courseService';
-import { searchCourseByTitle, searchCourseBySubject, searchCourseByInstructor, searchCourseByStartDate } from '../services/courseService';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
+import useCourseSearch from '../components/Search/useCourseSearch';
+import SearchComponent from '../components/Search/SearchComponent';
 
 const AdminCoursesPage = () => {
   const [courses, setCourses] = useState([]);
@@ -29,12 +26,12 @@ const AdminCoursesPage = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [page, setPage] = useState(1);
   const [coursesPerPage] = useState(5);
-  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [searchType, setSearchType] = useState('title');
+  const [searchTerm, setSearchTerm] = useState('');
   const token = localStorage.getItem('token');
 
   const loadCourses = useCallback(async () => {
@@ -50,16 +47,21 @@ const AdminCoursesPage = () => {
     }
   }, [page, token]);
 
+  const { handleSearch, loading: searchLoading } = useCourseSearch(token, loadCourses, setCourses, setSnackbar, searchType); // Pass searchType here
+
   useEffect(() => {
-    loadCourses();  
+    loadCourses();
   }, [loadCourses, page]);
 
+  const performSearch = async () => {
+    await handleSearch(searchTerm);
+  };
 
-  const indexOfLastCourse = page * coursesPerPage;
-  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
-  const totalPages = Math.ceil(courses.length / coursesPerPage);
-
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      performSearch();
+    }
+  };
 
   const handleDelete = async (id) => {
     setDeleting(true);
@@ -82,76 +84,21 @@ const AdminCoursesPage = () => {
     setUpdateDialogOpen(true);
   };
 
-  const handleSearch = async () => {
-    if (!searchTerm) {
-      await loadCourses(); 
-      return;
-    }
-
-    setLoading(true);
-    try {
-      let fetchedCourses;
-      switch (searchType) {
-        case 'subject':
-          fetchedCourses = await searchCourseBySubject(searchTerm, token);
-          break;
-        case 'instructor':
-          fetchedCourses = await searchCourseByInstructor(searchTerm, token);
-          break;
-        case 'startdate':
-          fetchedCourses = await searchCourseByStartDate(searchTerm, token);
-          break;
-        default:
-          fetchedCourses = await searchCourseByTitle(searchTerm, token);
-      }
-      setCourses(fetchedCourses);
-    } catch (error) {
-      console.error("Error searching courses:", error);
-      setSnackbar({ open: true, message: 'Failed to search courses', severity: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  const toggleSearchType = () => {
-    const nextType = searchType === 'title' ? 'subject'
-      : searchType === 'subject' ? 'instructor'
-        : searchType === 'instructor' ? 'startdate'
-          : 'title';
-    setSearchType(nextType);
-  };
-
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
+  const indexOfLastCourse = page * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const totalPages = Math.ceil(courses.length / coursesPerPage);
 
   return (
     <Container maxWidth="lg" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', width: '100%' }}>
-        <TextField
-          label={`Search by ${searchType}`}
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleKeyDown}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={toggleSearchType}>
-                  <FilterList />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+        <SearchComponent
+          handleSearch={performSearch}
+          searchType={searchType}
+          setSearchType={setSearchType}
+          handleKeyDown={handleKeyDown}
+          searchTerm={searchTerm}       
+          setSearchTerm={setSearchTerm} 
         />
         <Button
           variant="contained"
@@ -187,9 +134,7 @@ const AdminCoursesPage = () => {
                     <TableCell>{course.title}</TableCell>
                     <TableCell>{course.subject}</TableCell>
                     <TableCell>{course.capacity}</TableCell>
-                    <TableCell>
-                      {course.instructors.join(', ')}
-                    </TableCell>
+                    <TableCell>{course.instructors.join(', ')}</TableCell>
                     <TableCell>{course.startDate}</TableCell>
                     <TableCell>{course.endDate}</TableCell>
                     <TableCell>
