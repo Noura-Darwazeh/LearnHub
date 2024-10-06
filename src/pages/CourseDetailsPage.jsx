@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useParams to get courseId from URL
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Typography, Box, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import axios from 'axios';
+import { getCourseDetails } from '../services/getCourseDetails'
+import { enrollCourse } from '../services/enrollCourse '
+import SnackbarAlert from "../components/SnackBar/SnackbarAlert";
 
 const CourseDetailsContainer = styled(Container)({
   backgroundColor: '#f9f9f9',
@@ -10,33 +12,29 @@ const CourseDetailsContainer = styled(Container)({
   borderRadius: '16px',
   maxWidth: '800px',
   marginTop: '50px',
-  border: '1px solid #00749A'
+  border: '1px solid #00749a',
 });
-
 const CourseTitle = styled(Typography)({
   fontSize: '32px',
   fontWeight: 'bold',
   marginBottom: '20px',
   color: '#333',
 });
-
 const CourseInfo = styled(Typography)({
   fontSize: '18px',
   marginBottom: '12px',
   color: '#666',
 });
-
 const CourseDetailsBox = styled(Box)({
   backgroundColor: '#fff',
   borderRadius: '12px',
   padding: '20px',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
   marginTop: '20px',
-  border: '1px solid #00749A'
+  border: '1px solid #00749a',
 });
-
 const RegisterButton = styled(Button)({
-  backgroundColor: '#00749A',
+  backgroundColor: '#00749a',
   color: '#fff',
   padding: '10px 20px',
   fontSize: '18px',
@@ -44,28 +42,35 @@ const RegisterButton = styled(Button)({
 });
 
 const CourseDetailsPage = () => {
-  const { courseId } = useParams(); // Get courseId from URL
+  const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [disableRegister, setDisableRegister] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCourseDetails = async () => {
+    const fetchCourseData = async () => {
       try {
-        const response = await axios.get(`https://learnhub-backend-quk3.onrender.com/api/v1/course/CoursesDetails/${courseId}`);
-        setCourse(response.data);
+        const courseData = await getCourseDetails(courseId);
+        setCourse(courseData);
       } catch (error) {
-        setError('Failed to load course details');
+        setError(error.message);
       } finally {
         setLoading(false);
       }
     };
+    fetchCourseData();
 
-    fetchCourseDetails();
+    const fromCourseCard = localStorage.getItem('fromCourseCard');
+    if (fromCourseCard) {
+      setDisableRegister(true);
+      localStorage.removeItem('fromCourseCard');
+    }
   }, [courseId]);
-
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -76,29 +81,47 @@ const CourseDetailsPage = () => {
     if (isLoggedin) {
       try {
         const token = localStorage.getItem('token');
-        const config = {
-          headers: {
-            'Authorization': `Bearer ${token}` 
-          }
-        };
-        
-        const response = await axios.post(
-          `https://learnhub-backend-quk3.onrender.com/api/v1/course/enrollCourse/enroll`,
-          { courseId }, 
-          config
-        );
-
+        const response = await enrollCourse(courseId, token);
         if (response.status === 200) {
-          alert('Registration has been completed successfully.');
+          setSnackbar({
+            open: true,
+            message: 'Registration has been completed successfully.',
+            severity: 'success',
+          });
         } else {
-          alert('Registration was not successful');
+          setSnackbar({
+            open: true,
+            message: 'Registration was not successful.',
+            severity: 'error',
+          });
+          setTimeout(() => {
+            navigate("/LoginPage");
+          }, 2000);
         }
       } catch (error) {
-        console.error('Error during registration:', error);
-        alert('Error');
+        if (error.response && error.response.status === 401) {
+          // Handle unauthorized error
+          setSnackbar({
+            open: true,
+            message: 'The operation faild because you are not authorized', 
+            severity: 'error',
+          });
+        } else {
+          setSnackbar({
+            open: true,
+            message: 'Failed',
+            severity: 'error',
+          });
+        }
+        setTimeout(() => {
+          navigate("/LoginPage");
+        }, 2000);
       }
+    
     } else {
-      navigate('/login'); 
+      setTimeout(() => {
+        navigate("/LoginPage");
+      }, 2000);
     }
   };
 
@@ -108,7 +131,8 @@ const CourseDetailsPage = () => {
   return (
     <CourseDetailsContainer>
       <CourseTitle>{course.title}</CourseTitle>
-      <CourseInfo>Instructor:
+      <CourseInfo>
+        Instructor:
         <ul>
           {course && course.instructors.map((instructor, index) => (
             <li key={index}>{instructor}</li>
@@ -120,7 +144,6 @@ const CourseDetailsPage = () => {
       <CourseInfo>Capacity: {course.capacity}</CourseInfo>
       <CourseInfo>Subject: {course.subject}</CourseInfo>
       <CourseInfo>Created At: {course.createdAt}</CourseInfo>
-
       <CourseDetailsBox>
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           Course Overview
@@ -129,12 +152,17 @@ const CourseDetailsPage = () => {
           {course.description}
         </Typography>
       </CourseDetailsBox>
-
-      <RegisterButton onClick={handleRegisterClick}>
+      <RegisterButton onClick={handleRegisterClick} disabled={disableRegister}>
         Register for the Course
       </RegisterButton>
+      <SnackbarAlert
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </CourseDetailsContainer>
   );
+
 };
 
 export default CourseDetailsPage;
