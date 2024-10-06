@@ -98,18 +98,16 @@ We created wireframes using Balsamiq to visualize the user interface and user ex
 
 ### Use Case Diagrams
 1. **User Use Case**  
-   ![User Use Case Diagram](link-to-user-use-case-diagram)  
-   *(Add details about the user interactions)*
+   [View User Use Case Diagram](https://drive.google.com/file/d/1CRZgoNstDD9VlILzEoPLDCH6LbdssH0d/view?usp=sharing)  
 
 2. **Admin Use Case**  
-   ![Admin Use Case Diagram](link-to-admin-use-case-diagram)  
-   *(Add details about the admin functionalities)*
+   [View Admin Use Case Diagram](https://drive.google.com/file/d/1IahliQ8_pZZBQBM90VLNSdjPw6T-fMc7/view?usp=sharing)  
+  
 
 ### UML Model Diagram (ERD)
 In this project, we utilized **MongoDB** for data storage. We chose NoSQL due to its flexibility, ease of use, scalability, and compatibility with modern JavaScript development.
 
-![ERD Diagram](link-to-ERD-diagram)  
-*(Describe entities, relationships, and data stored in each table)*
+[View ERD Diagram](https://drive.google.com/file/d/1VEyFOqP5lySHcscmM7SfechIKrP4IA-L/view?usp=sharing)  
 
 ### UML Activity Diagram
 The UML activity diagram illustrates the flow of specific tasks within the application.  
@@ -126,7 +124,7 @@ Additionally, we utilized the **Factory design pattern** in the search component
 ## Code Collaboration 🤝
 - **Frontend Repository:** [LearnHub Frontend GitHub](https://github.com/Noura-Darwazeh/LearnHub)  
 - **Backend Repository:** [LearnHub Backend GitHub](https://github.com/bessantomeh/LearnHub_Backend/tree/main)  
-- **SonarQube Results:** ![SonarQube Screenshot](link-to-sonarqube-results-screenshot)
+- **SonarQube Results:** [SonarQube Screenshot](https://drive.google.com/file/d/1--8JeRK0NFrfqFKHFsw735opDPdj-MpX/view?usp=sharing)
 
 ## Testing 🧪
 
