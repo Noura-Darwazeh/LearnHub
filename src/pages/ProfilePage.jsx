@@ -182,7 +182,7 @@ const ProfilePage = () => {
                     backgroundImage: 'url(https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    height: '100vh',
+                    minHeight: '100vh',
                     p: 4,
                     display: 'flex',
                     flexDirection: 'column',
@@ -239,22 +239,6 @@ const ProfilePage = () => {
                         Welcome to your profile! You can edit your password, username, and view the courses you're enrolled in.
                     </Typography>
 
-
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', zIndex: 2 }}>
-                        <Tooltip title="Delete your account" arrow>
-                            <IconButton
-                                color="default"
-                                onClick={handleDeleteAccount}
-                                sx={{
-                                    '&:hover': {
-                                        color: 'red',
-                                    },
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
                     <Paper
                         elevation={10}
                         sx={{

@@ -10,6 +10,9 @@ import { Grid, Typography } from "@mui/material";
 import passwordValidationSchema from "../components/PasswordValidation/passwordValidationSchema";
 import Joi from "joi";
 
+/* This is a sign up page that takes the username, email and password with validation */
+
+
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

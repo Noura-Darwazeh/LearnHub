@@ -6,6 +6,11 @@ import {
   searchCourseByStartDate,
 } from '../../services/courseService';
 
+
+  /* This code provide the handling of the  search feature and filteration , 
+  it used in multiple locations in the code. */
+
+
 const useCourseSearch = (token, loadCourses, setCourses, setSnackbar, searchType) => {
   const [loading, setLoading] = useState(false);
 

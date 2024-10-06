@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+/* This file has the services and interacts with the APIs of 
+courses features and operations in the courses admin page*/
+
 const API_URL = "https://learnhub-backend-quk3.onrender.com/api/v1/course";
 
 

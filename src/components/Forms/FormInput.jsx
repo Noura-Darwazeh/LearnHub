@@ -4,6 +4,9 @@ import { TextField, InputAdornment, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+/* This component is for the password inputs using in the website with providing the visibility*/
+
+
 const FormInput = ({
   label,
   type,

@@ -10,6 +10,9 @@ import FormLink from '../components/Forms/FormLink';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert.jsx';
 import Joi from 'joi';
 
+/* This page is one of the steps of the forget password feature , it is for entring the email to send 
+the link to reset the password , with a validation for the email */
+
 const EnterEmailPage = () => {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');

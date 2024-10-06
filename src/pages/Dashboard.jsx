@@ -3,6 +3,9 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Container, CssBaseline, Drawer, AppBar, Toolbar, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { People, School, ExitToApp } from '@mui/icons-material';
 
+
+/* This page is a dashboard for the admin it has the courses and users pages and logout option*/
+
 const Dashboard = () => {
     const drawerWidth = 240;
     const navigate = useNavigate();

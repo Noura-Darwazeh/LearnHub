@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types'; 
 import { Box, Container, CssBaseline } from '@mui/material';
 
+/* This component is for the containers used in the authentication feature*/
+
 const FormContainer = ({ children }) => (
   <Container component="main" maxWidth="xs">
     <CssBaseline />

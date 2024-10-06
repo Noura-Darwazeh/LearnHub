@@ -3,6 +3,12 @@ import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } 
 import { createCourse } from '../../services/courseService';
 import SnackbarAlert from '../SnackBar/SnackbarAlert';
 
+
+/* This is a dialog for adding course on the users page on admin dashboard
+it has the text fields that will take the course data and handle the create user logic
+*/
+
+
 const AddCourseDialog = ({ open, onClose, token }) => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');

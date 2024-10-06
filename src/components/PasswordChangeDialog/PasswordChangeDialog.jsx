@@ -2,6 +2,9 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Grid, Button } from '@mui/material';
 import FormInput from '../Forms/FormInput';
 
+
+/* This component built as a dialog for the user to  change password and handling the logic of it */
+
 const PasswordChangeDialog = ({ openPasswordDialog, setOpenPasswordDialog, oldPassword, setOldPassword, newPassword, setNewPassword, confirmPassword, setConfirmPassword, passwordError, handleSavePassword }) => {
     return (
         <Dialog open={openPasswordDialog} onClose={() => setOpenPasswordDialog(false)}>

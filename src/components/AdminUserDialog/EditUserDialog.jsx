@@ -5,6 +5,10 @@ import SnackbarAlert from '../SnackBar/SnackbarAlert';
 import passwordValidationSchema from '../PasswordValidation/passwordValidationSchema';
 import FormInput from '../Forms/FormInput';
 
+/* This is a dialog for editing user on the users page on admin dashboard
+it has the text fields that will take the edited user data and handle the edit user logic
+*/
+
 const EditUserDialog = ({ open, onClose, token, user }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

@@ -10,7 +10,8 @@ import SnackbarAlert from "../components/SnackBar/SnackbarAlert";
 import passwordValidationSchema from "../components/PasswordValidation/passwordValidationSchema";
 import Joi from "joi";
 
-
+/* This is the last step of the reset password page it has a validation and confirmation for the new password
+and when the password reset successfully it shows a message for the user and go to the login page. */
 const ResetPassword = () => {
   const location = useLocation();
   const { email, code } = location.state || {};

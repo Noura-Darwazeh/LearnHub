@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+/* This file has the services and interacts with the APIs of 
+users profile features and operations in the users profile page*/
+
 const API_URL = 'https://learnhub-backend-quk3.onrender.com/api/v1/user';
 const API_Users_URL = 'https://learnhub-backend-quk3.onrender.com/api/v1/enrollCourse/courses';
 
