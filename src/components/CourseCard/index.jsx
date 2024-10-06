@@ -6,6 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+// This component creates a simple card layout that displays a course's title and description. 
+// It includes a "Learn More" button that triggers an action, allowing users to view more details about the course.
 export default function MediaCard({ course,onLearnMore }) {
  
   return (

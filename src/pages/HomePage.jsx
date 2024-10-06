@@ -7,6 +7,10 @@ import { Grid, CircularProgress, Button, Box } from '@mui/material';
 import CourseCard from '../components/CourseCard';
 import { NewCoursesApi } from '../services/NewCoursesApi';
 
+// This page is the home page of the website, displaying a list of new courses in a grid format. 
+// It includes a navigation bar, a slider at the top, and a footer.
+// by clicking "Learn More" or navigate to the full courses list by clicking the "View All" button. It handles 
+
 const HomePage = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);

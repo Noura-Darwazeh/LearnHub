@@ -5,6 +5,10 @@ import { styled } from '@mui/system';
 import { getCourseDetails } from '../services/getCourseDetails'
 import { enrollCourse } from '../services/enrollCourse '
 import SnackbarAlert from "../components/SnackBar/SnackbarAlert";
+import HomeButton from '../components/HomeButton/BackToHomeButton'
+
+// This page displays detailed information about a specific course, including the title, instructors, start/end dates, capacity, and subject. 
+// Users can register for the course if they are logged in. If not logged in, they will be redirected to the login page. 
 
 const CourseDetailsContainer = styled(Container)({
   backgroundColor: '#f9f9f9',
@@ -103,7 +107,7 @@ const CourseDetailsPage = () => {
           // Handle unauthorized error
           setSnackbar({
             open: true,
-            message: 'The operation faild because you are not authorized', 
+            message: 'The operation faild because you are not authorized',
             severity: 'error',
           });
         } else {
@@ -117,7 +121,7 @@ const CourseDetailsPage = () => {
           navigate("/LoginPage");
         }, 2000);
       }
-    
+
     } else {
       setTimeout(() => {
         navigate("/LoginPage");
@@ -129,38 +133,43 @@ const CourseDetailsPage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <CourseDetailsContainer>
-      <CourseTitle>{course.title}</CourseTitle>
-      <CourseInfo>
-        Instructor:
-        <ul>
-          {course && course.instructors.map((instructor, index) => (
-            <li key={index}>{instructor}</li>
-          ))}
-        </ul>
-      </CourseInfo>
-      <CourseInfo>Start Date: {course.startDate}</CourseInfo>
-      <CourseInfo>End Date: {course.endDate}</CourseInfo>
-      <CourseInfo>Capacity: {course.capacity}</CourseInfo>
-      <CourseInfo>Subject: {course.subject}</CourseInfo>
-      <CourseInfo>Created At: {course.createdAt}</CourseInfo>
-      <CourseDetailsBox>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          Course Overview
-        </Typography>
-        <Typography variant="body1" sx={{ marginTop: '10px' }}>
-          {course.description}
-        </Typography>
-      </CourseDetailsBox>
-      <RegisterButton onClick={handleRegisterClick} disabled={disableRegister}>
-        Register for the Course
-      </RegisterButton>
-      <SnackbarAlert
-        open={snackbar.open}
-        message={snackbar.message}
-        severity={snackbar.severity}
+    <>
+      <HomeButton sx={{ color: '#00749a', borderColor: '#00749a' }}
       />
-    </CourseDetailsContainer>
+      <CourseDetailsContainer>
+
+        <CourseTitle>{course.title}</CourseTitle>
+        <CourseInfo>
+          Instructor:
+          <ul>
+            {course && course.instructors.map((instructor, index) => (
+              <li key={index}>{instructor}</li>
+            ))}
+          </ul>
+        </CourseInfo>
+        <CourseInfo>Start Date: {course.startDate}</CourseInfo>
+        <CourseInfo>End Date: {course.endDate}</CourseInfo>
+        <CourseInfo>Capacity: {course.capacity}</CourseInfo>
+        <CourseInfo>Subject: {course.subject}</CourseInfo>
+        <CourseInfo>Created At: {course.createdAt}</CourseInfo>
+        <CourseDetailsBox>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+            Course Overview
+          </Typography>
+          <Typography variant="body1" sx={{ marginTop: '10px' }}>
+            {course.description}
+          </Typography>
+        </CourseDetailsBox>
+        <RegisterButton onClick={handleRegisterClick} disabled={disableRegister}>
+          Register for the Course
+        </RegisterButton>
+        <SnackbarAlert
+          open={snackbar.open}
+          message={snackbar.message}
+          severity={snackbar.severity}
+        />
+      </CourseDetailsContainer>
+    </>
   );
 
 };

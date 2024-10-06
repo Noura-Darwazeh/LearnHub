@@ -5,7 +5,11 @@ import CourseCard from '../components/CourseCard';
 import SearchComponent from '../components/Search/SearchComponent';
 import useCourseSearch from '../components/Search/useCourseSearch';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
+import HomeButton from '../components/HomeButton/BackToHomeButton'
 import { useNavigate } from 'react-router-dom';
+
+// This page is a course listing page that fetches and displays a list of courses using a grid layout. 
+
 const CoursePage = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,7 +44,11 @@ const CoursePage = () => {
         navigate(`/course/${courseId}`);
     };
     return (
+        <>
+        
         <Box sx={{ border: '1px solid #00749a', margin: '20px', borderRadius: '8px' }}>
+        <HomeButton sx={{ color: '#00749a', borderColor: '#00749a' }}
+        />
             <Box display="flex" justifyContent="center" sx={{ marginTop: '20px' }}>
                 <SearchComponent
                     handleSearch={handleSearch}
@@ -60,6 +68,7 @@ const CoursePage = () => {
             </Grid>
             <SnackbarAlert {...snackbar} />
         </Box>
+        </>
     );
 };
 export default CoursePage;

@@ -14,8 +14,10 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import MouseIcon from '@mui/icons-material/Mouse';
 
+// This component renders a responsive navigation bar with options for "Home," "Courses," and "About Us." 
+
 const pages = ['Home', 'Courses', 'About Us'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);

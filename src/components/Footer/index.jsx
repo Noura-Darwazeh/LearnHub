@@ -6,6 +6,9 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
+// This footer component renders a bottom navigation bar with icons for Facebook, Instagram, and LinkedIn. 
+// When a user clicks on one of the icons, they are redirected to the corresponding social media profile.
+
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
 
