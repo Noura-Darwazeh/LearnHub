@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types'; 
 import { Button } from '@mui/material';
 
+/* This component is for the Buttons used in the authentication feature*/
+
 const FormButton = ({ label, onClick, disabled = false }) => (
   <Button
     type="submit"

@@ -21,6 +21,11 @@ import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
 import AddUserDialog from '../components/AdminUserDialog/AddUserDialog';
 import EditUserDialog from '../components/AdminUserDialog/EditUserDialog';
 
+
+/* This page is for manage the users on the admin dashboard , it has a table of users , 
+edit , delete and add users features. */
+
+
 const AdminUsersPage = () => {
     const [users, setUsers] = useState([]);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });

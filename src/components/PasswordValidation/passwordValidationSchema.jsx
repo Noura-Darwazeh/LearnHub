@@ -1,5 +1,7 @@
 import Joi from "joi";
 
+/* This code is for password validation conditions in our website */
+
 const passwordValidationSchema = Joi.string()
   .min(8)
   .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[A-Za-z0-9!@#$%^&*()_+]+$/)

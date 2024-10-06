@@ -3,6 +3,11 @@ import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } 
 import { updateCourse } from '../../services/courseService';
 import SnackbarAlert from '../SnackBar/SnackbarAlert';
 
+/* This is a dialog for editing course on the courses page on admin dashboard
+it has the text fields that will take the edited course data and handle the edit course logic
+*/
+
+
 const UpdateCourseDialog = ({ open, onClose, token, course }) => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');

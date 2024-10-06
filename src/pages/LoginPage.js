@@ -12,6 +12,9 @@ import FormHeader from '../components/Forms/FormHeader';
 import FormInput from '../components/Forms/FormInput';
 import FormLink from '../components/Forms/FormLink';
 
+/* This is a login page with storing the token in the local storage */
+
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

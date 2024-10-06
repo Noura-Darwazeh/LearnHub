@@ -20,6 +20,10 @@ import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
 import useCourseSearch from '../components/Search/useCourseSearch';
 import SearchComponent from '../components/Search/SearchComponent';
 
+
+/* This page is for manage the courses on the admin dashboard , it has a table of courses , 
+edit , delete and add courses features. */
+
 const AdminCoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);

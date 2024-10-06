@@ -1,7 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import CourseCard from './CourseCard'; 
-import Typography from '@mui/material/Typography';
+
+/* This compinent is a grid holds the cards of the courses and shown 5 courses at once */
 
 const CourseGrid = ({ courses, onCourseClick }) => {
     return (

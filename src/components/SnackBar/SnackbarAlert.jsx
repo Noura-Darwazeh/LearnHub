@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Snackbar, Alert } from '@mui/material';
 
+
+/* This is a snack bar component built to be used to show messages for users based on severity*/
+
 const SnackbarAlert = ({ open, onClose, message, severity = 'success', duration = 3000 }) => (
   <Snackbar open={open} autoHideDuration={duration} onClose={onClose}>
     <Alert onClose={onClose} severity={severity} sx={{ width: '100%' }}>

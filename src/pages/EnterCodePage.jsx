@@ -11,6 +11,10 @@ import FormButton from '../components/Forms/FormButton';
 import FormLink from '../components/Forms/FormLink';
 import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
 
+/* This page is one of the steps of the forget password feature , it is for entring the code to reset 
+the password , with a validation for the code */
+
+
 const EnterCodePage = () => {
     const [code, setCode] = useState('');
     const [codeError, setCodeError] = useState('');

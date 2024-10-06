@@ -11,6 +11,10 @@ import passwordValidationSchema from '../PasswordValidation/passwordValidationSc
 import SnackbarAlert from '../SnackBar/SnackbarAlert'; 
 import { createUser } from '../../services/AdminUserService'; 
 
+/* This is a dialog for adding user on the users page on admin dashboard
+it has the text fields that will take the user data and handle the create user logic
+*/
+
 const AddUserDialog = ({ open, onClose, token }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

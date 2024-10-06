@@ -1,4 +1,3 @@
-// src/components/Search/SearchComponent.jsx
 import React from 'react';
 import {
     TextField,
@@ -7,6 +6,7 @@ import {
   } from '@mui/material';
   import { Search, FilterList } from '@mui/icons-material';
   
+  /* This is a search component for the courses search and filter built  to used for courses search */
 
   const SearchComponent = ({ handleSearch, searchType, setSearchType, handleKeyDown, searchTerm, setSearchTerm }) => {
     const toggleSearchType = () => {
@@ -22,8 +22,8 @@ import {
       <TextField
         label={`Search by ${searchType}`}
         variant="outlined"
-        value={searchTerm} // Use searchTerm value from parent
-        onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm using setSearchTerm
+        value={searchTerm} 
+        onChange={(event) => setSearchTerm(event.target.value)} 
         onKeyDown={handleKeyDown} 
         InputProps={{
           startAdornment: (
@@ -43,4 +43,4 @@ import {
     );
   };
 
-export default SearchComponent; // Ensure default export is present
+export default SearchComponent; 
