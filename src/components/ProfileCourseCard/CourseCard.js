@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Box } from '@mui/material';
+
+/** This page is card component for the courses in the user profile  page*/
+
 const CourseCard = ({ course, onClick }) => {
     const startDate = course?.startDate;
     const endDate = course?.endDate;
