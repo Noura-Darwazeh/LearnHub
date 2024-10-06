@@ -6,10 +6,23 @@ import {
   searchCourseByStartDate,
 } from '../../services/courseService';
 
-
   /* This code provide the handling of the  search feature and filteration , 
-  it used in multiple locations in the code. */
-
+  it used in multiple locations in the code. this search performed using Factory design pattern
+   */
+  const SearchMethodFactory = {
+  getSearchMethod(searchType) {
+    switch (searchType) {
+      case 'subject':
+        return searchCourseBySubject;
+      case 'instructor':
+        return searchCourseByInstructor;
+      case 'startdate':
+        return searchCourseByStartDate;
+      default:
+        return searchCourseByTitle;
+    }
+  },
+};
 
 const useCourseSearch = (token, loadCourses, setCourses, setSnackbar, searchType) => {
   const [loading, setLoading] = useState(false);
@@ -22,20 +35,9 @@ const useCourseSearch = (token, loadCourses, setCourses, setSnackbar, searchType
 
     setLoading(true);
     try {
-      let fetchedCourses;
-      switch (searchType) {
-        case 'subject':
-          fetchedCourses = await searchCourseBySubject(term, token);
-          break;
-        case 'instructor':
-          fetchedCourses = await searchCourseByInstructor(term, token);
-          break;
-        case 'startdate':
-          fetchedCourses = await searchCourseByStartDate(term, token);
-          break;
-        default:
-          fetchedCourses = await searchCourseByTitle(term, token);
-      }
+      const searchMethod = SearchMethodFactory.getSearchMethod(searchType);
+
+      const fetchedCourses = await searchMethod(term, token);
       setCourses(fetchedCourses);
     } catch (error) {
       console.error("Error searching courses:", error);
