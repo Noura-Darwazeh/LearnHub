@@ -1,15 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Box } from '@mui/material';
-
 const CourseCard = ({ course, onClick }) => {
     const startDate = course?.startDate;
     const endDate = course?.endDate;
-
     const formatDate = (date) => {
         if (date) {
             const dateObj = new Date(date);
@@ -19,10 +17,9 @@ const CourseCard = ({ course, onClick }) => {
         return 'N/A';
     };
     const handleCardClick = () => {
-        console.log("id"+course._id);
-        window.location.href = `/course/${course._id}`; // Redirect to course details page
+        localStorage.setItem('fromCourseCard', 'true');
+        window.location.href = `/course/${course._id}`;
     };
-
     return (
         <Card
             onClick={handleCardClick}
@@ -63,5 +60,4 @@ const CourseCard = ({ course, onClick }) => {
         </Card>
     );
 };
-
 export default CourseCard;
