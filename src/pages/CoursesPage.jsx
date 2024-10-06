@@ -2,42 +2,54 @@ import { Grid, CircularProgress, Box } from '@mui/material';
 import { useState, useEffect } from 'react';
 import AllCoursesApi from '../services/AllCoursesApi';
 import CourseCard from '../components/CourseCard';
-import Search from '../components/Search'
-import { useNavigate } from 'react-router-dom';  
-
-
+import SearchComponent from '../components/Search/SearchComponent';
+import useCourseSearch from '../components/Search/useCourseSearch';
+import SnackbarAlert from '../components/SnackBar/SnackbarAlert';
+import { useNavigate } from 'react-router-dom';
 const CoursePage = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); 
-
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchType, setSearchType] = useState('title');
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const navigate = useNavigate();
+    const getCourses = async () => {
+        setLoading(true);
+        try {
+            const data = await AllCoursesApi();
+            setCourses(data);
+        } catch (err) {
+            setError('Failed to load courses');
+        } finally {
+            setLoading(false);
+        }
+    };
+    const { handleSearch } = useCourseSearch(null, getCourses, setCourses, setSnackbar, searchType);
     useEffect(() => {
-        const getCourses = async () => {
-            setLoading(true);
-            try {
-                const data = await AllCoursesApi();
-                setCourses(data);
-            } catch (err) {
-                setError('Failed to load courses');
-            } finally {
-                setLoading(false);
-            }
-        };
         getCourses();
     }, []);
-
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch(searchTerm);
+        }
+    };
     if (loading) return <CircularProgress />;
     if (error) return <div>{error}</div>;
-
     const handleLearnMore = (courseId) => {
         navigate(`/course/${courseId}`);
     };
     return (
-        <Box sx={{ border: '1px solid #00749A', margin: '20px', borderRadius: '8px' }}>
-            <Box display="flex" justifyContent="center" >
-
-                <Search />
+        <Box sx={{ border: '1px solid #00749a', margin: '20px', borderRadius: '8px' }}>
+            <Box display="flex" justifyContent="center" sx={{ marginTop: '20px' }}>
+                <SearchComponent
+                    handleSearch={handleSearch}
+                    searchType={searchType}
+                    setSearchType={setSearchType}
+                    handleKeyDown={handleKeyDown}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                />
             </Box>
             <Grid container spacing={3} padding={3}>
                 {courses && courses.map((course) => (
@@ -46,8 +58,11 @@ const CoursePage = () => {
                     </Grid>
                 ))}
             </Grid>
+            <SnackbarAlert {...snackbar} />
         </Box>
     );
 };
-
 export default CoursePage;
+
+
+
