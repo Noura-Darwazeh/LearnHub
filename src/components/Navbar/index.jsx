@@ -9,18 +9,21 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import MouseIcon from '@mui/icons-material/Mouse';
+import useLogout from '../Logout/Logout'; // Keep the import
+import Button from '@mui/material/Button';
 
 const pages = ['Home', 'Courses', 'About Us'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
     
+    const handleLogout = useLogout();
+
     const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
@@ -39,11 +42,6 @@ function ResponsiveAppBar() {
         setAnchorElUser(null);
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/LoginPage');
-    };
-
     const handleNavigate = (page) => {
         if (page === 'Home') {
             navigate('/');
@@ -54,7 +52,6 @@ function ResponsiveAppBar() {
         }
         handleCloseNavMenu();
     };
-
 
     return (
         <AppBar position="static" sx={{ backgroundColor: '#00749A' }}>
